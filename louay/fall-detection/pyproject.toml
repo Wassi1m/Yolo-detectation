@@ -2,3 +2,23 @@
 name = "fall-detection"
 version = "0.1.0"
 requires-python = ">=3.10"
+description = "Frame-level fall detection with YOLO26"
+dependencies = [
+	"jupyterlab>=4.0",
+	"matplotlib>=3.8",
+	"numpy>=1.26",
+	"opencv-python>=4.9",
+	"pandas>=2.2",
+	"pyyaml>=6.0",
+	"ultralytics>=8.3.0",
+]
+
+[project.scripts]
+fall-detection = "fall_detection.runner:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,15 @@
+project: fall-detection
+model: yolo26n.pt
+device: cpu
+image_size: 640
+seed: 42
+train: false
+epochs: 3
+batch: 4
+workers: 0
+data_root: data
+sample_image: data/sample.jpg
+output_dir: outputs/baseline
+classes:
+  - standing
+  - fallen

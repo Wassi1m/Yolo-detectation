@@ -1,0 +1,10 @@
+project: unaccompanied-child-detection
+model: yolo26n.pt
+device: cpu
+image_size: 640
+seed: 42
+track: false
+sample_video: data/sample.mp4
+output_dir: outputs/baseline
+unaccompanied_seconds: 5
+association_distance_ratio: 1.5

@@ -1,1 +1,10 @@
-.venv
+.venv/
+data/raw/
+data/processed/
+outputs/
+*.pt
+*.onnx
+*.mp4
+__pycache__/
+.ipynb_checkpoints/
+*.egg-info/

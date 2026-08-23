@@ -1,0 +1,13 @@
+project: posture-load-estimation
+model: yolo26n-pose.pt
+device: cpu
+image_size: 640
+seed: 42
+train: false
+epochs: 3
+batch: 4
+workers: 0
+data_root: data
+sample_image: data/sample.jpg
+output_dir: outputs/baseline
+keypoint_confidence: 0.5
