@@ -1,0 +1,41 @@
+alert_cooldown: 10
+blur_size: 9
+clahe_clip_limit: 2.0
+clahe_enabled: true
+clahe_grid_size: 8
+detect_shadows: true
+webhook_url: ''
+evidence_dir: results/evidence
+log_file: results/surveillance.log
+min_area: 5000
+mog2_history: 500
+mog2_var_threshold: 65
+night_end_time: 04:00
+night_mode_enabled: true
+night_start_time: '2:00'
+pre_alarm_duration: 3
+record_video: true
+required_frames: 5
+roi_enabled: true
+roi_polygon:
+- - 0
+  - 100
+- - 1280
+  - 100
+- - 1280
+  - 720
+- - 0
+  - 720
+target_classes:
+- 0
+video_duration: 10
+cameras:
+  - id: "cam_1"
+    name: "Front Yard (Still)"
+    video_path: "data/still.mp4"
+  - id: "cam_2"
+    name: "Backyard (Walk)"
+    video_path: "data/Walk.mp4"
+yolo_confidence: 0.8
+yolo_enabled: true
+yolo_model: mod_facile.pt

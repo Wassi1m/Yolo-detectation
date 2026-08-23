@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentryEye | Smart Surveillance Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --card-border: #2d2d2d;
+            --primary-glow: #ff4757;
+            --accent-glow: #2ed573;
+            --success-glow: #2ed573;
+            --warning-glow: #ffa502;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #2a2a2a;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-glow);
+            border-radius: 50%;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Flat Panel Styling */
+        .glass-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Video Feed Panel */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--accent-glow);
+            letter-spacing: 0.5px;
+        }
+
+        /* Chat/Notification feed styling */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .message-card.verified {
+            border-left: 4px solid var(--primary-glow);
+            background: linear-gradient(to right, rgba(255, 51, 102, 0.05), transparent);
+        }
+
+        .message-card.unverified {
+            border-left: 4px solid var(--warning-glow);
+            background: linear-gradient(to right, rgba(255, 170, 0, 0.05), transparent);
+        }
+
+        .message-card.system {
+            border-left: 4px solid var(--accent-glow);
+            background: linear-gradient(to right, rgba(0, 240, 255, 0.05), transparent);
+        }
+
+        .message-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .msg-tag {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .msg-tag.verified { color: var(--primary-glow); background: rgba(255, 51, 102, 0.15); }
+        .msg-tag.unverified { color: var(--warning-glow); background: rgba(255, 170, 0, 0.15); }
+        .msg-tag.system { color: var(--accent-glow); background: rgba(0, 240, 255, 0.15); }
+
+        .msg-time {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .msg-body {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        .msg-evidence {
+            margin-top: 6px;
+            border-radius: 8px;
+            overflow: hidden;
+            max-height: 120px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .msg-evidence:hover {
+            transform: scale(1.02);
+        }
+
+        .msg-evidence img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Config Form styling */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            padding: 10px 14px;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--accent-glow);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* Custom Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-glow);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .btn-submit {
+            grid-column: 1 / -1;
+            background: #2a2a2a;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #3a3a3a;
+        }
+
+        .btn-submit:active {
+            background: #222222;
+        }
+
+        /* Lightbox modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: var(--text-main);
+            font-size: 2.5rem;
+            cursor: pointer;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo-icon">S</div>
+                <div>
+                    <h1>SentryEye</h1>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 1px;">AI SURVEILLANCE LAYER</div>
+                </div>
+            </div>
+            <div class="system-status">
+                <span class="status-dot"></span>
+                <span>SYSTEM ONLINE</span>
+                <span id="hud-clock" style="margin-left: 15px; font-family: var(--font-mono); color: var(--accent-glow);">00:00:00</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Left Side: Live Feed Grid -->
+            <div class="glass-panel">
+                <div class="panel-title">
+                    <span>Live Monitor Feed</span>
+                    <span id="bypass-badge" style="font-size: 0.75rem; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;"></span>
+                </div>
+                <div id="camera-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <!-- Video feeds populated dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Right Side: Chat Notifications -->
+            <div class="glass-panel chat-container">
+                <div class="panel-title">
+                    <span>Threat Notification Feed</span>
+                </div>
+                <div class="chat-messages" id="alert-feed">
+                    <!-- Dynamic logs appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="glass-panel">
+            <div class="panel-title">
+                <span>Configuration & Parameter Tuning</span>
+            </div>
+            <form id="config-form">
+                <div class="settings-grid">
+                    <!-- Config Section 1 -->
+                    <div class="form-group">
+                        <label for="video_path">Input Source / Camera Path</label>
+                        <input type="text" id="video_path" name="video_path">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="min_area">Min Motion Area (px²)</label>
+                        <input type="number" id="min_area" name="min_area">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yolo_confidence">YOLO Confidence Threshold</label>
+                        <input type="number" id="yolo_confidence" name="yolo_confidence" step="0.05" min="0.1" max="1.0">
+                    </div>
+
+                    <!-- Scheduling -->
+                    <div class="form-group">
+                        <label for="night_start_time">Night Window Start</label>
+                        <input type="text" id="night_start_time" name="night_start_time" placeholder="HH:MM">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="night_end_time">Night Window End</label>
+                        <input type="text" id="night_end_time" name="night_end_time" placeholder="HH:MM">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert_cooldown">Notification Cooldown (sec)</label>
+                        <input type="number" id="alert_cooldown" name="alert_cooldown">
+                    </div>
+
+                    <!-- Toggles -->
+                    <div class="toggle-container">
+                        <label>YOLO Verification</label>
+                        <label class="switch">
+                            <input type="checkbox" id="yolo_enabled" name="yolo_enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-container">
+                        <label>Night Mode Enabled</label>
+                        <label class="switch">
+                            <input type="checkbox" id="night_mode_enabled" name="night_mode_enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-container">
+                        <label>CLAHE Enhancer</label>
+                        <label class="switch">
+                            <input type="checkbox" id="clahe_enabled" name="clahe_enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-container">
+                        <label>ROI Area Masking</label>
+                        <label class="switch">
+                            <input type="checkbox" id="roi_enabled" name="roi_enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Apply Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div class="modal" id="image-modal">
+        <span class="modal-close" id="modal-close">&times;</span>
+        <img class="modal-content" id="modal-img" src="" alt="Evidence Closeup">
+    </div>
+
+    <script>
+        // Real-time HUD Clock
+        function updateHUDClock() {
+            const clock = document.getElementById('hud-clock');
+            if (clock) {
+                const now = new Date();
+                const timeString = now.toTimeString().split(' ')[0];
+                clock.textContent = timeString + " UTC";
+            }
+        }
+        setInterval(updateHUDClock, 1000);
+        updateHUDClock();
+
+        // Lightbox Handler
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalClose = document.getElementById('modal-close');
+
+        function openLightbox(src) {
+            modalImg.src = src;
+            modal.classList.add('show');
+        }
+
+        modalClose.onclick = () => modal.classList.remove('show');
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.classList.remove('show');
+        };
+
+        // Fetch configs and populate form
+        async function fetchConfig() {
+            try {
+                const res = await fetch('/config');
+                const config = await res.json();
+                
+                // Populate text and number inputs
+                for (const key in config) {
+                    const el = document.getElementById(key);
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = !!config[key];
+                        } else {
+                            el.value = config[key];
+                        }
+                    }
+                }
+                
+                // Populate cameras grid dynamically
+                const grid = document.getElementById('camera-grid');
+                grid.innerHTML = '';
+                if (config.cameras && config.cameras.length > 0) {
+                    config.cameras.forEach(cam => {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'video-container';
+                        wrapper.style.position = 'relative';
+                        wrapper.innerHTML = `
+                            <img src="/video_feed/${cam.id}" alt="${cam.name}" class="video-feed">
+                            <div class="hud-overlay">${cam.name.toUpperCase()}</div>
+                        `;
+                        grid.appendChild(wrapper);
+                    });
+                } else {
+                    grid.innerHTML = '<div style="color: var(--text-muted); padding: 2rem; text-align: center;">No cameras configured.</div>';
+                }
+                
+                // Update active times status on header
+                const start = config.night_start_time || "22:00";
+                const end = config.night_end_time || "06:00";
+                document.getElementById('bypass-badge').textContent = `ACTIVE SCHEDULE: ${start} - ${end}`;
+            } catch (e) {
+                console.error("Failed to fetch configuration", e);
+            }
+        }
+
+        // Handle Config submission
+        document.getElementById('config-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {};
+            
+            // Collect standard inputs
+            e.target.querySelectorAll('input:not([type="checkbox"])').forEach(el => {
+                if (el.type === 'number') {
+                    data[el.name] = parseFloat(el.value);
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+            
+            // Collect checkbox toggles
+            e.target.querySelectorAll('input[type="checkbox"]').forEach(el => {
+                data[el.name] = el.checked;
+            });
+
+            try {
+                const res = await fetch('/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                alert(result.message);
+                fetchConfig();
+            } catch (err) {
+                alert("Error updating configs");
+            }
+        };
+
+        // Connect to SSE event stream
+        const feed = document.getElementById('alert-feed');
+        
+        // Add default connection message
+        function appendSystemMessage(msg) {
+            const card = document.createElement('div');
+            card.className = 'message-card system';
+            card.innerHTML = `
+                <div class="msg-header">
+                    <span class="msg-tag system">System</span>
+                    <span class="msg-time">${new Date().toTimeString().split(' ')[0]}</span>
+                </div>
+                <div class="msg-body">${msg}</div>
+            `;
+            feed.prepend(card);
+        }
+
+        const source = new EventSource('/stream');
+        
+        source.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            if (data.type === 'system') {
+                appendSystemMessage(data.message);
+                return;
+            }
+
+            const card = document.createElement('div');
+            
+            // Determine styling based on verification keyword
+            let verified = false;
+            let cardClass = 'unverified';
+            let tagText = data.alert_type || 'Unverified';
+
+            if (data.alert_type === 'Verified Target' || data.message.includes("Verified") || data.message.includes("VERIFIED")) {
+                verified = true;
+                cardClass = 'verified';
+            }
+
+            card.className = `message-card ${cardClass}`;
+            
+            let evidenceHtml = '';
+            if (data.image) {
+                const imageUrl = `/evidence/${data.image}`;
+                evidenceHtml = `
+                    <div class="msg-evidence" onclick="openLightbox('${imageUrl}')">
+                        <img src="${imageUrl}" alt="Incident Screenshot">
+                    </div>
+                `;
+            }
+
+            // Convert confidence score to percentage representation
+            const yoloPct = data.yolo_conf !== undefined ? Math.round(data.yolo_conf * 100) + '%' : '0%';
+
+            card.innerHTML = `
+                <div class="msg-header">
+                    <span class="msg-tag ${cardClass}">${tagText}</span>
+                    <span class="msg-time">${data.time}</span>
+                </div>
+                <div class="msg-body" style="font-weight: 500; margin-bottom: 4px;">${data.message}</div>
+                
+                <div class="msg-metadata" style="display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 6px; margin-bottom: 6px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                    <div><span style="color: var(--accent-glow)">Cam:</span> ${data.camera_id || '0'}</div>
+                    <div><span style="color: var(--primary-glow)">YOLO Conf:</span> ${yoloPct}</div>
+                    <div><span style="color: var(--success-glow)">CV Motion:</span> ${data.opencv_area || '0'} px²</div>
+                </div>
+
+                ${evidenceHtml}
+            `;
+            
+            feed.prepend(card);
+
+            // Limit elements to keep DOM clean
+            while (feed.children.length > 50) {
+                feed.removeChild(feed.lastChild);
+            }
+        };
+
+        source.onerror = (e) => {
+            console.error("SSE stream error", e);
+        };
+
+        // Initial Load
+        fetchConfig();
+        appendSystemMessage("Surveillance visualization console loaded.");
+    </script>
+</body>
+</html>
