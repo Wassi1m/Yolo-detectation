@@ -4,7 +4,6 @@ version = "0.1.0"
 requires-python = ">=3.9"
 description = "Frame-level fall detection with YOLO26"
 dependencies = [
-	"jupyterlab>=4.0",
 	"matplotlib>=3.8",
 	"numpy>=1.26",
 	"opencv-python>=4.9",
