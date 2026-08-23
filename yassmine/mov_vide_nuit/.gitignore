@@ -1,0 +1,27 @@
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Large model weights / model checkpoints
+yolov8n.pt
+*.pt
+*.pth
+
+# IDE files
+.idea/
+.vscode/
+.DS_Store
+
+# Surveillance outputs (screenshots, videos, logs)
+results/
+
+# Large raw data videos
+data/
+
