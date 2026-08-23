@@ -3,11 +3,11 @@ from typing import Any
 
 from ultralytics import YOLO
 
-from .config import Settings
+from fall_detection.config import Settings
 
 
 def load_model(settings: Settings) -> YOLO:
-    return YOLO(settings.model)
+    return YOLO(str(settings.model))
 
 
 def predict(model: YOLO, source: Path, settings: Settings) -> list[Any]:

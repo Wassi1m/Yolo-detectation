@@ -3,8 +3,9 @@ model: yolo26n.pt
 device: cpu
 image_size: 640
 seed: 42
-track: false
+track: true
 sample_video: data/sample.mp4
 output_dir: outputs/baseline
 unaccompanied_seconds: 5
 association_distance_ratio: 1.5
+child_height_ratio: 0.75

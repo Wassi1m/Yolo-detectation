@@ -10,6 +10,7 @@ workers: 0
 data_root: data
 sample_image: data/sample.jpg
 output_dir: outputs/baseline
+fallen_aspect_ratio: 1.4
 classes:
   - standing
   - fallen
