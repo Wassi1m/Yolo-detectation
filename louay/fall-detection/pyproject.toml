@@ -12,8 +12,12 @@ dependencies = [
 	"ultralytics>=8.3.0",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest"]
+
 [project.scripts]
 fall-detection = "fall_detection.runner:main"
+fall-detection-eval = "fall_detection.evaluate:main"
 
 [build-system]
 requires = ["setuptools>=68"]
