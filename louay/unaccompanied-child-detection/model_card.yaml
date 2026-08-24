@@ -1,0 +1,8 @@
+name: unaccompanied-child-detection
+owner: louay
+task: tracking + unaccompanied-child heuristic
+input_type: video
+model: yolo26n.pt
+status: baseline
+metrics: {}
+depends_on: []

@@ -4,9 +4,8 @@ import logging
 from pathlib import Path
 from typing import Any, Iterable, Tuple
 
-from ultralytics import YOLO
-
 from unaccompanied_child.config import Settings, load_settings
+from unaccompanied_child.model import load_model
 from unaccompanied_child.separation import SeparationTracker, bbox_center, bbox_height, classify_children
 from unaccompanied_child.tracking import track_video, video_fps
 
@@ -70,7 +69,7 @@ def main() -> None:
         raise ValueError("Set track: true in the configuration before tracking.")
 
     fps = video_fps(source)
-    results_iter = track_video(YOLO(str(settings.model)), source, settings)
+    results_iter = track_video(load_model(settings), source, settings)
     frame_count, alert_count = analyze_tracks(
         results_iter, fps, settings, settings.output_dir / "tracking"
     )

@@ -18,9 +18,13 @@ class Settings:
 def load_settings(path: Path) -> Settings:
     values: dict[str, Any] = yaml.safe_load(path.read_text())
     project_root = path.resolve().parent.parent
-    models_root = project_root.parent / "models"
+    models_dir = (project_root / values["models_dir"]).resolve()
+    if not models_dir.is_dir():
+        raise FileNotFoundError(
+            f"models_dir does not exist: {models_dir} (from '{values['models_dir']}' in {path})"
+        )
     return Settings(
-        model=models_root / values["model"],
+        model=models_dir / values["model"],
         device=values["device"],
         image_size=int(values["image_size"]),
         output_dir=project_root / values["output_dir"],

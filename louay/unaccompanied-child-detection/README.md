@@ -23,16 +23,27 @@ README for what replaces it.
 
 ## Setup
 
+Windows:
+
 ```
 python -m venv .venv
 .venv/Scripts/pip install -e .
 ```
 
-## Run
+Linux/macOS:
 
 ```
-.venv/Scripts/unaccompanied-child
+python3 -m venv .venv
+.venv/bin/pip install -e .
 ```
+
+Tested with Python 3.9.
+
+## Run
+
+Windows: `.venv/Scripts/unaccompanied-child`
+
+Linux/macOS: `.venv/bin/unaccompanied-child`
 
 By default this reads `config/baseline.yaml` and runs on `data/sample.mp4`. Pass `--source` to
 run on a different video, or `--config` to use a different configuration file. `track` must be
@@ -50,7 +61,10 @@ Results are written to `outputs/baseline/tracking/`:
 
 `config/baseline.yaml` fields used by the code:
 
-- `model`: weight file name, resolved against the shared `../models/` folder.
+- `model`: weight file name, resolved against `models_dir`.
+- `models_dir`: path to the shared weights folder, relative to this project's root. Defaults to
+  `../../models` (the repo-level shared folder). Loading fails with a clear error if this path
+  does not exist.
 - `device`, `image_size`: passed to the YOLO26 model.
 - `sample_video`, `output_dir`: default input and output paths.
 - `track`: must be `true` to run.

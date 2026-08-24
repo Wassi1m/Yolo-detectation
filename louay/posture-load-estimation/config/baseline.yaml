@@ -1,5 +1,6 @@
 project: posture-load-estimation
 model: yolo26n-pose.pt
+models_dir: ../../models
 device: cpu
 image_size: 640
 seed: 42

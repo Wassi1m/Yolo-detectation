@@ -1,5 +1,6 @@
 project: unaccompanied-child-detection
 model: yolo26n.pt
+models_dir: ../../models
 device: cpu
 image_size: 640
 seed: 42

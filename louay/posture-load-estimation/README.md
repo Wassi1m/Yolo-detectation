@@ -15,16 +15,27 @@ prove the pipeline works end to end. See the top-level README for what replaces 
 
 ## Setup
 
+Windows:
+
 ```
 python -m venv .venv
 .venv/Scripts/pip install -e .
 ```
 
-## Run
+Linux/macOS:
 
 ```
-.venv/Scripts/posture-load
+python3 -m venv .venv
+.venv/bin/pip install -e .
 ```
+
+Tested with Python 3.9.
+
+## Run
+
+Windows: `.venv/Scripts/posture-load`
+
+Linux/macOS: `.venv/bin/posture-load`
 
 By default this reads `config/baseline.yaml` and runs on `data/sample.jpg`. Pass `--source` to
 run on a different image, or `--config` to use a different configuration file.
@@ -41,11 +52,13 @@ Results are written to `outputs/baseline/predictions/`:
 
 `config/baseline.yaml` fields used by the code:
 
-- `model`: weight file name, resolved against the shared `../models/` folder.
+- `model`: weight file name, resolved against `models_dir`.
+- `models_dir`: path to the shared weights folder, relative to this project's root. Defaults to
+  `../../models` (the repo-level shared folder). Loading fails with a clear error if this path
+  does not exist.
 - `device`, `image_size`: passed to the YOLO26 model.
 - `sample_image`, `output_dir`: default input and output paths.
 - `keypoint_confidence`: minimum per-keypoint confidence required to use a side of the body.
 
 The remaining fields in the file (`seed`, `train`, `epochs`, `batch`, `workers`, `data_root`) are
 not read by the current code.
-

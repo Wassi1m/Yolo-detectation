@@ -17,12 +17,16 @@ We use YOLO26 with the Ultralytics Python package.
 
 The first model is a small baseline. We will improve it after reviewing the results.
 
-Weight files are shared across the three projects instead of being downloaded separately into
-each one. See `models/README.md` for details.
+Weight files are shared across the three projects (and, per the repo-wide `ARCHITECTURE_COMMUNE.md`
+standard, across the other intern folders too) instead of being downloaded separately into each
+one. They live in `../models/` at the repository root, not inside `louay/`. See
+`../models/README.md` for details.
 
 ## Setup
 
-Each project has its own virtual environment and is installed in editable mode:
+Each project has its own virtual environment and is installed in editable mode.
+
+Windows:
 
 ```
 cd <project-name>
@@ -30,8 +34,18 @@ python -m venv .venv
 .venv/Scripts/pip install -e .
 ```
 
+Linux/macOS:
+
+```
+cd <project-name>
+python3 -m venv .venv
+.venv/bin/pip install -e .
+```
+
+Tested with Python 3.9.
+
 Running the project's console script (for example `fall-detection`) downloads the required
-model weight into the shared `models/` folder the first time, then reuses it on later runs and
+model weight into the shared `../models/` folder the first time, then reuses it on later runs and
 across the other projects.
 
 ## Current phase
@@ -40,20 +54,19 @@ The current phase covers a working local baseline for all three projects:
 
 1. Load the configuration.
 2. Check the input data.
-3. Load a pretrained YOLO26 model from the shared `models/` folder.
+3. Load a pretrained YOLO26 model from the shared `../models/` folder.
 4. Run a prediction or tracking pass.
 5. Apply a simple, zero-training heuristic specific to each project (see each project's own
    README for details).
 6. Save the results and a small CSV summary.
 
 The heuristics are intentionally simple and not yet trained on labeled data. They exist so the
-full pipeline is provably working end to end. See "Next phases" below for what replaces them.
+full pipeline is provably working end to end.
 
-The following work comes later:
-
-- Add tests.
-- Improve the models and data.
-- Add more complete evaluation.
+Basic unit tests exist for the pure logic in each project (see each project's own README, under
+"Tests"). fall-detection also has a quantitative evaluation against a labeled dataset (see its
+README's "Evaluation" section) and is the current candidate for fine-tuning; the other two
+projects are not yet evaluated against labeled data.
 
 ## Data notes
 

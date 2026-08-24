@@ -1,0 +1,8 @@
+name: posture-load-estimation
+owner: louay
+task: pose estimation + trunk-flexion angle indicator
+input_type: image
+model: yolo26n-pose.pt
+status: baseline
+metrics: {}
+depends_on: []

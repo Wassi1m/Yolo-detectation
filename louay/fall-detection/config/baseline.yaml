@@ -1,5 +1,6 @@
 project: fall-detection
 model: yolo26n.pt
+models_dir: ../../models
 device: cpu
 image_size: 640
 seed: 42
@@ -10,7 +11,7 @@ workers: 0
 data_root: data
 sample_image: data/sample.jpg
 output_dir: outputs/baseline
-fallen_aspect_ratio: 1.4
+fallen_aspect_ratio: 1.0
 classes:
   - standing
   - fallen

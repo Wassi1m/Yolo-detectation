@@ -1,0 +1,15 @@
+name: fall-detection
+owner: louay
+task: classification (standing / fallen)
+input_type: image
+model: yolo26n.pt
+status: evaluated
+metrics:
+  precision_fallen: 1.000
+  recall_fallen: 0.877
+  f1_fallen: 0.935
+  accuracy: 0.985
+  mean_latency_ms: 35.9
+  no_detection_rate: 0.246
+  evaluated_on: UR Fall Detection Dataset (URFD), stride=4, 1836 evaluated frames
+depends_on: []
