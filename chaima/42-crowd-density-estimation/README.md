@@ -1,42 +1,38 @@
-# #42 — Crowd Density Estimation / Bousculade Risk
+# #42 — Crowd Density Estimation
  
-**Difficulty:** Facile
-**Status:** In progress — core detection logic tested, pending connection to live surveillance camera
+**Status:** baseline (voir model_card.yaml)
  
-## Goal
-Estimate crowd density in a defined zone (e.g. entrance, platform, corridor) from surveillance
-camera footage, and flag when density crosses a risk threshold (potential overcrowding /
-stampede risk).
- 
-## Approach
-1. Use a pretrained **YOLO26** model (Ultralytics, nano variant) to detect people in each video
-   frame — no custom training required.
-2. Count detections whose center point falls inside a defined zone (a rectangle within the frame).
-3. Classify the count into LOW / MEDIUM / HIGH density using configurable thresholds.
-4. Display live bounding boxes, the zone outline, the current count, and the density level on
-   screen in real time.
-## Why this design
-The script reads from `cv2.VideoCapture`, which works identically whether the source is a video
-file, a webcam, or a live camera stream (RTSP URL). This means the same code used for local
-testing will connect to the real surveillance camera by simply changing the `--source` argument —
-no logic changes needed.
- 
-## Files
-- `crowd_density.py` — main script: detection, zone counting, density classification, display
-- `requirements.txt` — Python dependencies (ultralytics, opencv-python)
-- `yolo26n.pt` — pretrained model weights (auto-downloaded on first run, not committed to git)
-- `test_video.mp4` — local sample footage used for development/testing (not committed to git)
-## How to run
+## Setup
 ```bash
-pip install -r requirements.txt
+pip install -e .
+```
  
-# test with a local video file
-python crowd_density.py --source test_video.mp4
+## Run
+```bash
+# avec l'exemple fourni
+crowd-density --config config/baseline.yaml
  
-# test with a webcam
-python crowd_density.py --source 0
+# avec une source différente (fichier, webcam, ou RTSP)
+crowd-density --config config/baseline.yaml --source rtsp://<camera-ip>:554/stream1
  
-# connect to a live surveillance camera (RTSP)
-python crowd_density.py --source rtsp://<camera-ip>:554/stream1
+# sur un serveur sans écran
+crowd-density --config config/baseline.yaml --headless
+```
+ 
+## Sortie produite
+- `outputs/baseline/detections.csv` — une ligne par frame : timestamp, nombre de personnes dans la zone, niveau de densité
+- `outputs/baseline/high_<timestamp>.jpg` — instantané sauvegardé à chaque transition vers le niveau HIGH
+## Configuration (config/baseline.yaml)
+| Champ | Description |
+|---|---|
+| `zone` | `[x1, y1, x2, y2]` en pixels, la zone surveillée. `null` = image entière. À redéfinir selon le cadrage réel de la caméra. |
+| `low_threshold` | Nombre de personnes max pour le niveau LOW |
+| `medium_threshold` | Nombre de personnes max pour le niveau MEDIUM (au-delà = HIGH) |
+| `headless` | `true` désactive l'affichage cv2.imshow (obligatoire en déploiement serveur) |
+| `model` | Nom du fichier de poids, résolu contre le dossier `models/` partagé à la racine du repo |
+ 
+## Tests
+```bash
+pytest tests/
 ```
  

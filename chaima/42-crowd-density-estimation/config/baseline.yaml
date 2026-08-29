@@ -1,0 +1,14 @@
+# Configuration de base 
+project: crowd-density-estimation
+model: yolo26n.pt         
+device: cpu                 
+image_size: 640
+source: data/sample.mp4    
+output_dir: outputs/baseline
+ 
+# Champs métier propres à ce projet
+zone: null                  
+low_threshold: 5           
+medium_threshold: 15        
+headless: false             
+ 
