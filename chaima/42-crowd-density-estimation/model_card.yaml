@@ -1,0 +1,9 @@
+name: crowd-density-estimation
+owner: chaima
+task: comptage de personnes en zone + classification de densité (LOW/MEDIUM/HIGH)
+input_type: video          
+model: yolo26n.pt
+status: baseline            
+metrics: {}                  
+depends_on: []
+ 

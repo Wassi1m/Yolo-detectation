@@ -1,0 +1,22 @@
+[project]
+name = "crowd-density-estimation"
+version = "0.1.0"
+description = "Estimation de densité de foule en zone définie via YOLO26"
+requires-python = ">=3.10"
+dependencies = [
+    "ultralytics>=8.4.0,<9",
+    "opencv-python>=4.9,<5",
+    "numpy>=1.26,<3",
+    "pyyaml>=6.0,<7",
+]
+ 
+[project.scripts]
+crowd-density = "crowd_density.runner:main"
+ 
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+ 
+[tool.setuptools.packages.find]
+where = ["src"]
+ 
