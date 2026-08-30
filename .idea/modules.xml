@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Yolo-detectation.iml" filepath="$PROJECT_DIR$/.idea/Yolo-detectation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/crowd-density-estimation.iml" filepath="$PROJECT_DIR$/.idea/crowd-density-estimation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fall-detection.iml" filepath="$PROJECT_DIR$/.idea/fall-detection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/posture-load-estimation.iml" filepath="$PROJECT_DIR$/.idea/posture-load-estimation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/unaccompanied-child-detection.iml" filepath="$PROJECT_DIR$/.idea/unaccompanied-child-detection.iml" />
     </modules>
   </component>
 </project>

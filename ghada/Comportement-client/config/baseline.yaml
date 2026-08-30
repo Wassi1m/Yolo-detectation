@@ -1,0 +1,21 @@
+project: comportement-client
+
+model: rfdetr-small
+
+device: cpu
+
+image_size: 640
+
+source: data/sample.mp4
+
+output_dir: outputs/baseline
+
+confidence: 0.5
+
+shelf_roi:
+  x1: 100
+  y1: 150
+  x2: 900
+  y2: 650
+
+attention_threshold: 3
