@@ -1,0 +1,8 @@
+name: product-counting
+owner: chaima
+task: comptage de produits par franchissement de ligne (tracking multi-objets)
+input_type: video
+model: yolo26n.pt
+status: baseline
+metrics: {}
+depends_on: []

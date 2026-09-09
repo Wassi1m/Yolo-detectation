@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+outputs/
+*.pt
+*.onnx
+*.egg-info/
+test_video.mp4
+sample.mp4

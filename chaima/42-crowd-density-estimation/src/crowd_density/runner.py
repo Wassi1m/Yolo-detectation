@@ -99,7 +99,10 @@ def run(settings: Settings, source: str | int | None = None) -> RunResult:
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
                 cv2.putText(frame, f"Density: {level}", (20, 80),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-                cv2.imshow("Crowd Density Estimation - YOLO26", frame)
+                display_width = 960
+                scale = display_width / frame.shape[1]
+                display_frame = cv2.resize(frame, None, fx=scale, fy=scale)
+                cv2.imshow("Crowd Density Estimation - YOLO26", display_frame)
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
  
