@@ -1,0 +1,13 @@
+project: product-counting
+model: yolo26n.pt
+device: cpu
+image_size: 640
+source: data/sample.mp4
+output_dir: outputs/baseline
+ 
+classes_to_count: [bottle]
+ 
+
+counting_line: null
+ 
+headless: false

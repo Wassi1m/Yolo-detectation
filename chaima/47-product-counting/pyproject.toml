@@ -1,0 +1,21 @@
+[project]
+name = "product-counting"
+version = "0.1.0"
+description = "Comptage de produits sur ligne de préparation via YOLO26 tracking"
+requires-python = ">=3.10"
+dependencies = [
+    "ultralytics>=8.4.0,<9",
+    "opencv-python>=4.9,<5",
+    "numpy>=1.26,<3",
+    "pyyaml>=6.0,<7",
+]
+ 
+[project.scripts]
+product-counting = "product_counting.runner:main"
+ 
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+ 
+[tool.setuptools.packages.find]
+where = ["src"]

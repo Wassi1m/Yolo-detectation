@@ -13,7 +13,7 @@ class Settings:
     image_size: int
     source: str
     output_dir: str
-    zone: Optional[list]  # [x1, y1, x2, y2] ou None
+    zone: Optional[list]  
     low_threshold: int
     medium_threshold: int
     headless: bool
